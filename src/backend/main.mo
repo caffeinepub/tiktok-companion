@@ -8,12 +8,12 @@ import List "mo:core/List";
 import Int "mo:core/Int";
 import Runtime "mo:core/Runtime";
 import Order "mo:core/Order";
-import Migration "migration";
+
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
 // apply migration via with-clause
-(with migration = Migration.run)
+
 actor {
   // Include authorization system
   let accessControlState = AccessControl.initState();
@@ -28,24 +28,35 @@ actor {
   // Initialize publication state (migrated old deployments)
   var publicationState : PublicationState = #published;
 
-  // Toggle publication state (admin only)
-  public shared ({ caller }) func togglePublicationState() : async PublicationState {
+  // Helper function to check publication state authorization
+  private func requirePublished(caller : Principal) {
+    if (publicationState == #unpublished and not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Service is currently unpublished");
+    };
+  };
+
+  // Republish (admin only)
+  public shared ({ caller }) func republish() : async PublicationState {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can perform this action");
     };
 
-    publicationState := switch (publicationState) {
-      case (#published) { #unpublished };
-      case (#unpublished) { #published };
-    };
+    publicationState := #published;
     publicationState; // return the current state
   };
 
-  // Query current publication state (admin only)
-  public query ({ caller }) func getPublicationState() : async PublicationState {
+  // Unpublish (admin only)
+  public shared ({ caller }) func unpublish() : async PublicationState {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view publication state");
+      Runtime.trap("Unauthorized: Only admins can perform this action");
     };
+
+    publicationState := #unpublished;
+    publicationState; // return the current state
+  };
+
+  // Query current publication state (all actors)
+  public query ({ caller }) func getPublicationState() : async PublicationState {
     publicationState;
   };
 
@@ -100,6 +111,8 @@ actor {
 
   // User Profile Management
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view profiles");
     };
@@ -107,6 +120,8 @@ actor {
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+    requirePublished(caller);
+
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
     };
@@ -114,6 +129,8 @@ actor {
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
@@ -122,6 +139,8 @@ actor {
 
   // Video Idea Management
   public shared ({ caller }) func addVideoIdea(title : Text, description : Text, hashtagsList : [Text]) : async () {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can add video ideas");
     };
@@ -146,6 +165,8 @@ actor {
   };
 
   public shared ({ caller }) func scheduleVideoIdea(title : Text, scheduledDate : Time.Time) : async () {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can schedule video ideas");
     };
@@ -176,6 +197,8 @@ actor {
   };
 
   public query ({ caller }) func getVideoIdeas() : async [VideoIdea] {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view video ideas");
     };
@@ -187,6 +210,8 @@ actor {
   };
 
   public query ({ caller }) func getVideosByDateRange(startDate : Time.Time, endDate : Time.Time) : async [VideoIdea] {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view video ideas");
     };
@@ -208,6 +233,8 @@ actor {
   };
 
   public shared ({ caller }) func deleteDraft(title : Text) : async () {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can delete drafts");
     };
@@ -228,6 +255,8 @@ actor {
 
   // Hashtag Management
   public shared ({ caller }) func addHashtag(name : Text) : async () {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can add hashtags");
     };
@@ -248,6 +277,8 @@ actor {
   };
 
   public query ({ caller }) func getHashtags() : async [Hashtag] {
+    requirePublished(caller);
+
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can view hashtags");
     };

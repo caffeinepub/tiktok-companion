@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Settings as SettingsIcon, Lock, Power } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import StaffCodeDialog from '@/components/StaffCodeDialog';
-import { useGetPublicationState, useTogglePublicationState } from '@/hooks/useQueries';
+import { useGetPublicationState, useRepublish, useUnpublish } from '@/hooks/useQueries';
 import { Loader2 } from 'lucide-react';
 
 export default function Settings() {
@@ -11,25 +11,23 @@ export default function Settings() {
   const [isStaffVerified, setIsStaffVerified] = useState(false);
   
   const { data: publicationState, isLoading: isLoadingState } = useGetPublicationState();
-  const togglePublicationMutation = useTogglePublicationState();
-
-  // Check sessionStorage for staff verification status
-  useEffect(() => {
-    const verified = sessionStorage.getItem('staffVerified') === 'true';
-    setIsStaffVerified(verified);
-  }, []);
+  const republishMutation = useRepublish();
+  const unpublishMutation = useUnpublish();
 
   const handleStaffVerified = () => {
     setIsStaffVerified(true);
-    sessionStorage.setItem('staffVerified', 'true');
   };
 
-  const handleTogglePublication = async () => {
-    await togglePublicationMutation.mutateAsync();
+  const handleRepublish = async () => {
+    await republishMutation.mutateAsync();
+  };
+
+  const handleUnpublish = async () => {
+    await unpublishMutation.mutateAsync();
   };
 
   const isPublished = publicationState === 'published';
-  const isToggling = togglePublicationMutation.isPending;
+  const isToggling = republishMutation.isPending || unpublishMutation.isPending;
 
   return (
     <div className="container py-8 max-w-4xl">
@@ -96,7 +94,7 @@ export default function Settings() {
                     <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                   ) : (
                     <Button
-                      onClick={handleTogglePublication}
+                      onClick={isPublished ? handleUnpublish : handleRepublish}
                       disabled={isToggling}
                       variant={isPublished ? 'destructive' : 'default'}
                       className="min-w-[140px]"

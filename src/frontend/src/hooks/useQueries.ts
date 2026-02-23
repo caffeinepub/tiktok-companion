@@ -157,29 +157,48 @@ export function useGetPublicationState() {
       return actor.getPublicationState();
     },
     enabled: !!actor && !isFetching,
+    staleTime: 10000, // 10 seconds
+    refetchInterval: 30000, // Refetch every 30 seconds to keep state current
     retry: false,
   });
 }
 
-export function useTogglePublicationState() {
+export function useRepublish() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.togglePublicationState();
+      return actor.republish();
     },
-    onSuccess: (newState) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['publicationState'] });
-      const message = newState === 'unpublished' 
-        ? 'App has been unpublished' 
-        : 'App has been republished';
-      toast.success(message);
+      toast.success('App has been republished successfully');
     },
     onError: (error: any) => {
-      console.error('Error toggling publication state:', error);
-      toast.error(error.message || 'Failed to update publication state');
+      console.error('Error republishing app:', error);
+      toast.error(error.message || 'Failed to republish app');
+    },
+  });
+}
+
+export function useUnpublish() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.unpublish();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['publicationState'] });
+      toast.success('App has been unpublished');
+    },
+    onError: (error: any) => {
+      console.error('Error unpublishing app:', error);
+      toast.error(error.message || 'Failed to unpublish app');
     },
   });
 }

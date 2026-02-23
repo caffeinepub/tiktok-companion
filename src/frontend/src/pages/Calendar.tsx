@@ -1,39 +1,48 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useGetVideosByDateRange, useGetPublicationState } from '../hooks/useQueries';
 import CalendarView from '../components/CalendarView';
 import ScheduleDialog from '../components/ScheduleDialog';
 import UnpublishedOverlay from '../components/UnpublishedOverlay';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Calendar as CalendarIcon, Loader2, Plus } from 'lucide-react';
+import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
+import { VideoIdea } from '../backend';
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
+  const [preselectedDate, setPreselectedDate] = useState<Date | null>(null);
+  const { data: publicationState, isLoading: isLoadingPublicationState } = useGetPublicationState();
 
-  const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-  const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+  // Calculate start and end of month
+  const { startDate, endDate } = useMemo(() => {
+    const start = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const end = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0, 23, 59, 59);
+    return {
+      startDate: BigInt(start.getTime() * 1_000_000),
+      endDate: BigInt(end.getTime() * 1_000_000),
+    };
+  }, [currentDate]);
 
-  const { data: scheduledVideos, isLoading } = useGetVideosByDateRange(
-    BigInt(startOfMonth.getTime() * 1000000),
-    BigInt(endOfMonth.getTime() * 1000000)
-  );
-  const { data: publicationState } = useGetPublicationState();
+  const { data: scheduledVideos, isLoading } = useGetVideosByDateRange(startDate, endDate);
 
-  const handleDateClick = (date: Date) => {
-    setSelectedDate(date);
-    setDialogOpen(true);
+  const handleDateChange = (date: Date) => {
+    setCurrentDate(date);
   };
 
-  const handleCloseDialog = () => {
-    setDialogOpen(false);
-    setSelectedDate(null);
+  const handleDateClick = (date: Date) => {
+    setPreselectedDate(date);
+    setScheduleDialogOpen(true);
+  };
+
+  const handleScheduleSuccess = () => {
+    setScheduleDialogOpen(false);
+    setPreselectedDate(null);
   };
 
   const isUnpublished = publicationState === 'unpublished';
 
-  if (isLoading) {
+  if (isLoading || isLoadingPublicationState) {
     return (
       <div className="container py-12">
         <div className="flex items-center justify-center min-h-[60vh]">
@@ -46,57 +55,46 @@ export default function Calendar() {
     );
   }
 
+  if (isUnpublished) {
+    return <UnpublishedOverlay />;
+  }
+
   return (
-    <>
-      {isUnpublished && <UnpublishedOverlay />}
-      <div className="container py-8 md:py-12 space-y-8">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-display font-bold">Content Calendar</h1>
-            <p className="text-muted-foreground mt-1">
-              Plan and schedule your TikTok content
-            </p>
-          </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="lg" className="shadow-glow-teal">
-                <Plus className="w-5 h-5 mr-2" />
-                Schedule Video
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Schedule Video Idea</DialogTitle>
-              </DialogHeader>
-              <ScheduleDialog preselectedDate={selectedDate} onSuccess={handleCloseDialog} />
-            </DialogContent>
-          </Dialog>
+    <div className="container py-8 md:py-12 space-y-8">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-display font-bold">Content Calendar</h1>
+          <p className="text-muted-foreground mt-1">
+            Plan and schedule your TikTok content
+          </p>
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <div className="p-6 rounded-xl border bg-card">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                <CalendarIcon className="w-5 h-5 text-primary" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">{scheduledVideos?.length || 0}</p>
-                <p className="text-sm text-muted-foreground">Scheduled</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Calendar */}
-        <CalendarView
-          currentDate={currentDate}
-          onDateChange={setCurrentDate}
-          scheduledVideos={scheduledVideos || []}
-          onDateClick={handleDateClick}
-        />
+        <Button size="lg" onClick={() => setScheduleDialogOpen(true)} className="shadow-glow-teal">
+          <CalendarIcon className="w-5 h-5 mr-2" />
+          Schedule Video
+        </Button>
       </div>
-    </>
+
+      {/* Calendar */}
+      <CalendarView
+        currentDate={currentDate}
+        onDateChange={handleDateChange}
+        scheduledVideos={scheduledVideos || []}
+        onDateClick={handleDateClick}
+      />
+
+      {/* Schedule Dialog */}
+      <Dialog open={scheduleDialogOpen} onOpenChange={setScheduleDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Schedule Video</DialogTitle>
+          </DialogHeader>
+          <ScheduleDialog
+            preselectedDate={preselectedDate}
+            onSuccess={handleScheduleSuccess}
+          />
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

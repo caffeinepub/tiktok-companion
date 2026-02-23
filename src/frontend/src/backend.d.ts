@@ -54,7 +54,8 @@ export interface backendInterface {
     getVideoIdeas(): Promise<Array<VideoIdea>>;
     getVideosByDateRange(startDate: Time, endDate: Time): Promise<Array<VideoIdea>>;
     isCallerAdmin(): Promise<boolean>;
+    republish(): Promise<PublicationState>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     scheduleVideoIdea(title: string, scheduledDate: Time): Promise<void>;
-    togglePublicationState(): Promise<PublicationState>;
+    unpublish(): Promise<PublicationState>;
 }

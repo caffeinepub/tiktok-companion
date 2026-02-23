@@ -2,10 +2,9 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-button-labeled-staff-access-or-similar-under-the-moderation-section-on-the-settings-page-that-when-clicked-opens-a-dialog-or-modal-prompting-the-user-to-enter-a-staff-code",
-      "featureTitle": "Add a button labeled 'Staff Access' or similar under the Moderation section on the Settings page that when clicked opens a dialog or modal prompting the user to enter a staff code",
+      "featureId": "feature-remove-sessionstorage-persistence-for-staff-code-verification-so-that-staff-must-enter-the-code-2807-every-time-they-access-the-settings-page-moderation-controls",
+      "featureTitle": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
       "files": [
-        "frontend/src/components/StaffCodeDialog.tsx",
         "frontend/src/pages/Settings.tsx"
       ],
       "components": [
@@ -17,55 +16,14 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-11"
+        "REQ-16"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-staff-code-verification-that-checks-if-the-entered-code-equals-2807-and-if-correct-unlocks-and-displays-a-publish-unpublish-toggle-control",
-      "featureTitle": "Implement staff code verification that checks if the entered code equals '2807' and if correct, unlocks and displays a publish/unpublish toggle control",
+      "featureId": "feature-update-frontend-to-fetch-publication-state-before-any-data-queries-and-display-unpublishedoverlay-on-all-pages-except-settings-when-state-is-unpublished",
+      "featureTitle": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
       "files": [
-        "frontend/src/components/StaffCodeDialog.tsx",
-        "frontend/src/pages/Settings.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-12"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-button-in-the-unlocked-staff-control-that-when-clicked-unpublishes-the-app-and-changes-to-show-republish-or-similar-text-allowing-the-state-to-be-toggled-back-and-forth",
-      "featureTitle": "Add a button in the unlocked staff control that when clicked unpublishes the app and changes to show 'Republish' or similar text, allowing the state to be toggled back and forth",
-      "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/Settings.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-14"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-when-the-app-is-in-unpublished-state-display-a-prominent-notice-or-overlay-on-all-pages-except-settings-for-staff-informing-users-that-the-app-is-currently-closed-for-maintenance-or-under-moderation",
-      "featureTitle": "When the app is in unpublished state, display a prominent notice or overlay on all pages (except Settings for staff) informing users that the app is currently closed for maintenance or under moderation",
-      "files": [
-        "frontend/src/components/UnpublishedOverlay.tsx",
         "frontend/src/pages/Calendar.tsx",
         "frontend/src/pages/Dashboard.tsx",
         "frontend/src/pages/Hashtags.tsx",
@@ -80,7 +38,27 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-15"
+        "REQ-18"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-fix-the-republish-button-functionality-so-that-clicking-it-successfully-changes-the-backend-publication-state-from-unpublished-back-to-published",
+      "featureTitle": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/Settings.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-19"
       ],
       "confidence": "high"
     }

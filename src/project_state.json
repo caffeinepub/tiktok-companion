@@ -1,12 +1,13 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 11,
+  "projectStateVersion": 13,
   "summary": "TikTok-related app",
   "architectural_notes": [],
   "known_issues": [
-    "Moderation system with staff code needs simplification - failed to build initially"
+    "Unpublish/republish functionality not working - app remains accessible when unpublished",
+    "Staff code authentication persisting - needs to require entry each time"
   ],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-create-a-video-content-management-dashboard-where-users-can-view-organize-and-track-their-tiktok-video-ideas-and-drafts",
@@ -119,6 +120,30 @@
         "REQ-15"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-sessionstorage-persistence-for-staff-code-verification-so-that-staff-must-enter-the-code-2807-every-time-they-access-the-settings-page-moderation-controls",
+      "title": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-frontend-to-fetch-publication-state-before-any-data-queries-and-display-unpublishedoverlay-on-all-pages-except-settings-when-state-is-unpublished",
+      "title": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-republish-button-functionality-so-that-clicking-it-successfully-changes-the-backend-publication-state-from-unpublished-back-to-published",
+      "title": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -139,6 +164,26 @@
       "summary": "Create an app publication state management system in the backend that tracks whether the app is published or unpublished, defaulting to published state",
       "reqIds": [
         "REQ-13"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Make unpublish functionality actually prevent app access and fix republish button to restore access",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Remove any stored staff authentication - require staff code entry every time for moderation access",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Implement backend enforcement of publication state where unpublished state blocks all non-admin API calls except getPublicationState",
+      "reqIds": [
+        "REQ-17"
       ],
       "status": "pending"
     }

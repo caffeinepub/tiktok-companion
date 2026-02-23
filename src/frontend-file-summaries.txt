@@ -8,7 +8,7 @@
   "frontend/src/components/ProfileSetup.tsx": "First-time user profile setup modal with name input form that saves user profile to backend, using undefined for optional bio field.",
   "frontend/src/pages/Landing.tsx": "Landing page with hero section, feature cards, and CTA sections, showing UnpublishedOverlay when app is unpublished.",
   "frontend/src/pages/Dashboard.tsx": "Main dashboard page displaying video ideas in tabbed interface with create/edit/delete functionality, showing UnpublishedOverlay when app is unpublished.",
-  "frontend/src/pages/Calendar.tsx": "Content calendar page with month view and scheduled video display, showing UnpublishedOverlay when app is unpublished.",
+  "frontend/src/pages/Calendar.tsx": "Content calendar page with month view and scheduled video display, showing UnpublishedOverlay when app is unpublished, with proper CalendarView and ScheduleDialog prop interfaces.",
   "frontend/src/pages/Hashtags.tsx": "Hashtag management page with search functionality and grid display, showing UnpublishedOverlay when app is unpublished.",
   "frontend/src/components/VideoIdeaCard.tsx": "Card component displaying video idea details with title, description, status badge, hashtags, edit button, and a delete button with confirmation dialog that appears only for draft status videos.",
   "frontend/src/components/VideoIdeaForm.tsx": "Form component for creating and editing video ideas with title, description, and hashtag inputs.",
@@ -17,8 +17,8 @@
   "frontend/src/components/HashtagCard.tsx": "Card component displaying hashtag name, usage count, creation date, and copy-to-clipboard functionality.",
   "frontend/src/components/HashtagForm.tsx": "Form component for adding new hashtags with automatic # prefix handling.",
   "frontend/src/hooks/useGetCallerUserProfile.ts": "React Query hook for fetching current user profile with proper loading state handling to prevent modal flash.",
-  "frontend/src/hooks/useQueries.ts": "Centralized React Query hooks for all backend operations including video ideas, hashtags, scheduling, user profile management, draft deletion, and publication state management with cache invalidation and toast notifications.",
-  "frontend/src/pages/Settings.tsx": "Settings page with general settings and moderation section featuring staff code verification button and publication toggle control that appears after verification, persisting staff verification status in sessionStorage.",
-  "frontend/src/components/StaffCodeDialog.tsx": "Dialog component for staff code verification that checks if entered code equals '2807' and calls onVerified callback on success, showing error message on failure.",
+  "frontend/src/hooks/useQueries.ts": "Centralized React Query hooks for all backend operations including video ideas, hashtags, scheduling, user profile management, draft deletion, and separate useRepublish/useUnpublish mutations with proper cache invalidation and toast notifications.",
+  "frontend/src/pages/Settings.tsx": "Settings page with general settings and moderation section featuring staff code verification and publication toggle control using separate republish/unpublish mutations, with no sessionStorage persistence for staff verification.",
+  "frontend/src/components/StaffCodeDialog.tsx": "Dialog component for staff code verification that checks if entered code equals '2807' and calls onVerified callback on success, with no sessionStorage persistence.",
   "frontend/src/components/UnpublishedOverlay.tsx": "Full-screen overlay component displaying maintenance notice with warning icon when app is unpublished."
 }

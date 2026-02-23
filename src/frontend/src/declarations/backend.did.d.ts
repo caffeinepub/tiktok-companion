@@ -52,9 +52,10 @@ export interface _SERVICE {
   'getVideoIdeas' : ActorMethod<[], Array<VideoIdea>>,
   'getVideosByDateRange' : ActorMethod<[Time, Time], Array<VideoIdea>>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
+  'republish' : ActorMethod<[], PublicationState>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
   'scheduleVideoIdea' : ActorMethod<[string, Time], undefined>,
-  'togglePublicationState' : ActorMethod<[], PublicationState>,
+  'unpublish' : ActorMethod<[], PublicationState>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

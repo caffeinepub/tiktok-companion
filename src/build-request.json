@@ -1,112 +1,95 @@
 {
   "kind": "build_request",
-  "title": "Add staff code verification and app publish/unpublish toggle in moderation settings",
-  "priority": "normal",
+  "title": "Fix unpublish functionality and enforce staff code entry on every access",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-11",
-      "text": "Add a button labeled 'Staff Access' or similar under the Moderation section on the Settings page that when clicked opens a dialog or modal prompting the user to enter a staff code",
+      "id": "REQ-16",
+      "text": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-latest"
         ],
         "quotes": [
-          "make there be a button under moderation where when clicked it asks for a staff code"
+          "make every one have to type the staff code"
         ]
       },
       "acceptanceCriteria": [
-        "A button is visible in the Moderation section of the Settings page",
-        "Clicking the button opens a dialog with an input field for entering a staff code",
-        "The dialog has clear labels and submit/cancel actions"
+        "Staff code verification state is not stored in sessionStorage",
+        "Users must enter code '2807' each time they visit Settings page",
+        "Moderation controls remain locked until code is entered, even after page refresh"
       ]
     },
     {
-      "id": "REQ-12",
-      "text": "Implement staff code verification that checks if the entered code equals '2807' and if correct, unlocks and displays a publish/unpublish toggle control",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-user-final"
-        ],
-        "quotes": [
-          "if the code 2807 is put in you have a button unlocked"
-        ]
-      },
-      "acceptanceCriteria": [
-        "When the user enters '2807' and submits, the dialog closes and a new control becomes visible",
-        "If an incorrect code is entered, show an error message and do not unlock the control",
-        "The unlocked control persists in the current session"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Create an app publication state management system in the backend that tracks whether the app is published or unpublished, defaulting to published state",
+      "id": "REQ-17",
+      "text": "Implement backend enforcement of publication state where unpublished state blocks all non-admin API calls except getPublicationState",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-latest"
         ],
         "quotes": [
-          "it un publishes the app and stays unpublished"
+          "Make the app ACTUALY get unpublished"
         ]
       },
       "acceptanceCriteria": [
-        "Backend maintains a stable variable tracking publication state (published/unpublished)",
-        "State persists across canister upgrades",
-        "Default state is published when the app is first deployed"
+        "When publicationState is #unpublished, all user-facing API methods return an error or empty results for non-admin callers",
+        "getPublicationState method remains accessible to all users regardless of publication state",
+        "Admin users (verified via authorization system) can access all methods even when unpublished",
+        "Methods to protect: getUserProfile, getVideoIdeas, addVideoIdea, updateVideoIdea, deleteVideoIdea, scheduleVideo, getHashtags, addHashtag"
       ]
     },
     {
-      "id": "REQ-14",
-      "text": "Add a button in the unlocked staff control that when clicked unpublishes the app and changes to show 'Republish' or similar text, allowing the state to be toggled back and forth",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-user-final"
-        ],
-        "quotes": [
-          "when clicked it un publishes the app and stays unpublished until you press in close re published button"
-        ]
-      },
-      "acceptanceCriteria": [
-        "After staff code verification, a toggle button is displayed showing current publication state",
-        "Clicking the button when app is published changes state to unpublished and updates button text to 'Republish'",
-        "Clicking the button when app is unpublished changes state back to published and updates button text accordingly",
-        "Backend endpoint exists to update publication state",
-        "Frontend calls backend to persist state changes"
-      ]
-    },
-    {
-      "id": "REQ-15",
-      "text": "When the app is in unpublished state, display a prominent notice or overlay on all pages (except Settings for staff) informing users that the app is currently closed for maintenance or under moderation",
+      "id": "REQ-18",
+      "text": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-final"
+          "msg-latest"
         ],
         "quotes": [
-          "un publishes the app and stays unpublished"
+          "Make the app ACTUALY get unpublished"
         ]
       },
       "acceptanceCriteria": [
-        "When publication state is unpublished, show a full-screen or prominent overlay/banner on Dashboard, Calendar, Hashtags, and Landing pages",
-        "The notice clearly communicates that the app is temporarily unavailable",
-        "Settings page remains accessible so staff can republish the app",
-        "When state changes back to published, the notice is removed immediately"
+        "Create a usePublicationState hook that queries backend publication state",
+        "Dashboard, Calendar, Hashtags, and Landing pages check publication state before rendering main content",
+        "UnpublishedOverlay displays on affected pages when state is #unpublished",
+        "Settings page always remains accessible for staff to republish the app"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ],
+        "quotes": [
+          "the republish button to work"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Clicking the Republish button in Settings triggers the setPublicationState backend method with #published",
+        "Backend state changes from #unpublished to #published",
+        "Button label updates to show 'Unpublish' after successful republish",
+        "App becomes accessible to all users immediately after republishing",
+        "Success toast notification displays confirming republish action"
       ]
     }
   ],
   "constraints": [
-    "The staff code must be exactly '2807'",
-    "Publication state must persist across canister upgrades",
-    "Settings page must remain accessible even when app is unpublished so staff can restore access"
+    "Staff code must remain '2807'",
+    "Settings page must remain accessible regardless of publication state",
+    "Admin authorization system (MixinAuthorization) must be used for backend publication state enforcement",
+    "Do not modify the UnpublishedOverlay component UI"
   ],
   "nonGoals": [
-    "Implementing multiple staff codes or role management beyond this single code",
-    "Creating a backend admin dashboard separate from the Settings page",
-    "Adding password hashing or encryption for the staff code",
-    "Implementing time-based automatic republishing"
+    "Changing the staff code value",
+    "Adding additional admin roles or permissions",
+    "Modifying the visual design of the Settings page or UnpublishedOverlay"
   ],
   "imageRequirements": {
     "required": [],

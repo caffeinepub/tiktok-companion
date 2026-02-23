@@ -1,93 +1,75 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T23:34:50.142Z",
+  "generatedAt": "2026-02-23T23:45:40.166Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
-    "implemented": 4,
+    "total": 4,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-11",
-        "summary": "Add a button labeled 'Staff Access' or similar under the Moderation section on the Settings page that when clicked opens a dialog or modal prompting the user to enter a staff code",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Settings.tsx",
-          "frontend/src/components/StaffCodeDialog.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Settings.tsx",
-          "frontend/src/components/StaffCodeDialog.tsx"
-        ]
-      },
-      {
-        "id": "REQ-12",
-        "summary": "Implement staff code verification that checks if the entered code equals '2807' and if correct, unlocks and displays a publish/unpublish toggle control",
+        "id": "REQ-16",
+        "summary": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/StaffCodeDialog.tsx",
           "frontend/src/pages/Settings.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/StaffCodeDialog.tsx",
           "frontend/src/pages/Settings.tsx"
         ]
       },
       {
-        "id": "REQ-13",
-        "summary": "Create an app publication state management system in the backend that tracks whether the app is published or unpublished, defaulting to published state",
+        "id": "REQ-17",
+        "summary": "Implement backend enforcement of publication state where unpublished state blocks all non-admin API calls except getPublicationState",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-14",
-        "summary": "Add a button in the unlocked staff control that when clicked unpublishes the app and changes to show 'Republish' or similar text, allowing the state to be toggled back and forth",
+        "id": "REQ-18",
+        "summary": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/Settings.tsx"
+          "frontend/src/hooks/usePublicationState.ts",
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/pages/Calendar.tsx",
+          "frontend/src/pages/Hashtags.tsx",
+          "frontend/src/pages/Landing.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/pages/Settings.tsx"
+          "frontend/src/pages/Dashboard.tsx",
+          "frontend/src/pages/Calendar.tsx",
+          "frontend/src/pages/Hashtags.tsx",
+          "frontend/src/pages/Landing.tsx"
         ]
       },
       {
-        "id": "REQ-15",
-        "summary": "When the app is in unpublished state, display a prominent notice or overlay on all pages (except Settings for staff) informing users that the app is currently closed for maintenance or under moderation",
+        "id": "REQ-19",
+        "summary": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/UnpublishedOverlay.tsx",
-          "frontend/src/pages/Dashboard.tsx",
-          "frontend/src/pages/Calendar.tsx",
-          "frontend/src/pages/Hashtags.tsx",
-          "frontend/src/pages/Landing.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Settings.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/UnpublishedOverlay.tsx",
-          "frontend/src/pages/Dashboard.tsx",
-          "frontend/src/pages/Calendar.tsx",
-          "frontend/src/pages/Hashtags.tsx",
-          "frontend/src/pages/Landing.tsx"
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Settings.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/StaffCodeDialog.tsx",
-    "frontend/src/components/UnpublishedOverlay.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",

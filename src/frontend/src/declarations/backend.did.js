@@ -65,9 +65,10 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'republish' : IDL.Func([], [PublicationState], []),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
   'scheduleVideoIdea' : IDL.Func([IDL.Text, Time], [], []),
-  'togglePublicationState' : IDL.Func([], [PublicationState], []),
+  'unpublish' : IDL.Func([], [PublicationState], []),
 });
 
 export const idlInitArgs = [];
@@ -130,9 +131,10 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'republish' : IDL.Func([], [PublicationState], []),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
     'scheduleVideoIdea' : IDL.Func([IDL.Text, Time], [], []),
-    'togglePublicationState' : IDL.Func([], [PublicationState], []),
+    'unpublish' : IDL.Func([], [PublicationState], []),
   });
 };
 
