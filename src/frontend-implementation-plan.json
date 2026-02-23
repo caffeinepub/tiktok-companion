@@ -1,0 +1,109 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add staff code verification and app publish/unpublish toggle in moderation settings",
+  "requirements": [
+    {
+      "id": "REQ-11",
+      "summary": "Add Staff Access button in Moderation section that opens staff code entry dialog",
+      "acceptanceCriteria": [
+        "A button is visible in the Moderation section of the Settings page",
+        "Clicking the button opens a dialog with an input field for entering a staff code",
+        "The dialog has clear labels and submit/cancel actions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Settings.tsx",
+          "operation": "modify",
+          "description": "Add a 'Staff Access' button to the Moderation card that triggers a staff code dialog. The button should be prominently displayed within the existing Moderation card structure."
+        },
+        {
+          "path": "frontend/src/components/StaffCodeDialog.tsx",
+          "operation": "create",
+          "description": "Create a dialog component using shadcn/ui Dialog that prompts for staff code entry. Include an input field for the code, submit button, cancel button, and clear labels. Use useState to manage the input value and loading state during verification."
+        }
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "summary": "Implement staff code verification that checks for code '2807' and unlocks publish toggle control",
+      "acceptanceCriteria": [
+        "When the user enters '2807' and submits, the dialog closes and a new control becomes visible",
+        "If an incorrect code is entered, show an error message and do not unlock the control",
+        "The unlocked control persists in the current session"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/StaffCodeDialog.tsx",
+          "operation": "modify",
+          "description": "Add verification logic that checks if entered code equals '2807'. On success, call an onVerified callback to notify the parent component. On failure, display an error message below the input field without closing the dialog."
+        },
+        {
+          "path": "frontend/src/pages/Settings.tsx",
+          "operation": "modify",
+          "description": "Add state management for staff verification status using useState. When StaffCodeDialog verification succeeds, set the verified state to true and close the dialog. Use sessionStorage to persist verified state across page refreshes within the same session."
+        }
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "summary": "Add publish/unpublish toggle button that syncs state with backend",
+      "acceptanceCriteria": [
+        "After staff code verification, a toggle button is displayed showing current publication state",
+        "Clicking the button when app is published changes state to unpublished and updates button text to 'Republish'",
+        "Clicking the button when app is unpublished changes state back to published and updates button text accordingly",
+        "Backend endpoint exists to update publication state",
+        "Frontend calls backend to persist state changes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add useGetPublicationState query hook that calls actor.getPublicationState() to fetch the current publication state. Add useTogglePublicationState mutation hook that calls actor.togglePublicationState() and invalidates the publication state query on success."
+        },
+        {
+          "path": "frontend/src/pages/Settings.tsx",
+          "operation": "modify",
+          "description": "Add publication toggle control that appears only when staff is verified. Use useGetPublicationState to display current state and useTogglePublicationState to handle button clicks. Show 'Unpublish App' when published and 'Republish App' when unpublished. Include loading state during toggle operation."
+        }
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "summary": "Display maintenance notice overlay on all pages when app is unpublished, except Settings",
+      "acceptanceCriteria": [
+        "When publication state is unpublished, show a full-screen or prominent overlay/banner on Dashboard, Calendar, Hashtags, and Landing pages",
+        "The notice clearly communicates that the app is temporarily unavailable",
+        "Settings page remains accessible so staff can republish the app",
+        "When state changes back to published, the notice is removed immediately"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/UnpublishedOverlay.tsx",
+          "operation": "create",
+          "description": "Create a full-screen overlay component that displays a maintenance message. Include a centered card with icon, heading ('App Temporarily Unavailable'), message explaining the app is under maintenance, and styling using Tailwind classes with backdrop blur effect."
+        },
+        {
+          "path": "frontend/src/pages/Dashboard.tsx",
+          "operation": "modify",
+          "description": "Import useGetPublicationState and UnpublishedOverlay. Add conditional rendering to show UnpublishedOverlay when publication state is 'unpublished'. Render the overlay above all other page content."
+        },
+        {
+          "path": "frontend/src/pages/Calendar.tsx",
+          "operation": "modify",
+          "description": "Import useGetPublicationState and UnpublishedOverlay. Add conditional rendering to show UnpublishedOverlay when publication state is 'unpublished'. Render the overlay above all other page content."
+        },
+        {
+          "path": "frontend/src/pages/Hashtags.tsx",
+          "operation": "modify",
+          "description": "Import useGetPublicationState and UnpublishedOverlay. Add conditional rendering to show UnpublishedOverlay when publication state is 'unpublished'. Render the overlay above all other page content."
+        },
+        {
+          "path": "frontend/src/pages/Landing.tsx",
+          "operation": "modify",
+          "description": "Import useGetPublicationState and UnpublishedOverlay. Add conditional rendering to show UnpublishedOverlay when publication state is 'unpublished'. Render the overlay above all other page content. Do not show overlay on Settings page route."
+        }
+      ]
+    }
+  ]
+}

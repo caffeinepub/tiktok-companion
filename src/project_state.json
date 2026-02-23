@@ -1,0 +1,149 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 11,
+  "summary": "TikTok-related app",
+  "architectural_notes": [],
+  "known_issues": [
+    "Moderation system with staff code needs simplification - failed to build initially"
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-video-content-management-dashboard-where-users-can-view-organize-and-track-their-tiktok-video-ideas-and-drafts",
+      "title": "Create a video content management dashboard where users can view, organize, and track their TikTok video ideas and drafts",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-user-authentication-using-internet-identity-so-each-user-has-their-own-private-collection-of-video-ideas",
+      "title": "Implement user authentication using Internet Identity so each user has their own private collection of video ideas",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-content-calendar-view-where-users-can-schedule-and-plan-when-to-post-their-tiktok-videos",
+      "title": "Add a content calendar view where users can schedule and plan when to post their TikTok videos",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-hashtag-and-trend-tracker-feature-where-users-can-save-and-organize-relevant-hashtags-for-their-videos",
+      "title": "Create a hashtag and trend tracker feature where users can save and organize relevant hashtags for their videos",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-a-vibrant-modern-interface-with-a-creative-visual-theme-inspired-by-content-creation-platforms-using-energetic-colors-clear-typography-and-engaging-layouts-that-feel-dynamic-and-user-friendly",
+      "title": "Design a vibrant, modern interface with a creative visual theme inspired by content creation platforms, using energetic colors, clear typography, and engaging layouts that feel dynamic and user-friendly",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-delete-button-at-the-bottom-of-every-video-idea-card-in-draft-status-that-allows-users-to-permanently-remove-the-draft-from-their-collection",
+      "title": "Add a delete button at the bottom of every video idea card in draft status that allows users to permanently remove the draft from their collection",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-made-by-zachary-j-attribution-text-at-the-bottom-of-the-application-footer",
+      "title": "Add 'made by Zachary j' attribution text at the bottom of the application footer",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-three-line-hamburger-menu-button-at-the-top-right-of-the-layout-component-header-that-opens-a-dropdown-menu",
+      "title": "Add a three-line hamburger menu button at the top right of the Layout component header that opens a dropdown menu",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-settings-or-moderation-option-in-the-dropdown-menu-that-navigates-to-a-new-settings-page-route",
+      "title": "Add a 'Settings' or 'Moderation' option in the dropdown menu that navigates to a new settings page route",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-basic-settings-page-with-a-simple-interface-as-the-foundation-for-future-moderation-features",
+      "title": "Create a basic settings page with a simple interface as the foundation for future moderation features",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-button-labeled-staff-access-or-similar-under-the-moderation-section-on-the-settings-page-that-when-clicked-opens-a-dialog-or-modal-prompting-the-user-to-enter-a-staff-code",
+      "title": "Add a button labeled 'Staff Access' or similar under the Moderation section on the Settings page that when clicked opens a dialog or modal prompting the user to enter a staff code",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-staff-code-verification-that-checks-if-the-entered-code-equals-2807-and-if-correct-unlocks-and-displays-a-publish-unpublish-toggle-control",
+      "title": "Implement staff code verification that checks if the entered code equals '2807' and if correct, unlocks and displays a publish/unpublish toggle control",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-button-in-the-unlocked-staff-control-that-when-clicked-unpublishes-the-app-and-changes-to-show-republish-or-similar-text-allowing-the-state-to-be-toggled-back-and-forth",
+      "title": "Add a button in the unlocked staff control that when clicked unpublishes the app and changes to show 'Republish' or similar text, allowing the state to be toggled back and forth",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-when-the-app-is-in-unpublished-state-display-a-prominent-notice-or-overlay-on-all-pages-except-settings-for-staff-informing-users-that-the-app-is-currently-closed-for-maintenance-or-under-moderation",
+      "title": "When the app is in unpublished state, display a prominent notice or overlay on all pages (except Settings for staff) informing users that the app is currently closed for maintenance or under moderation",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-3",
+      "summary": "Add three-line menu button at top right with moderation system (staff code 2807 to close/open app for public)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add staff code verification (2807) under moderation that unlocks app publish/unpublish toggle button",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Create an app publication state management system in the backend that tracks whether the app is published or unpublished, defaulting to published state",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "status": "pending"
+    }
+  ],
+  "projectName": "TikTok Companion",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

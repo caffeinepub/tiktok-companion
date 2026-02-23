@@ -1,0 +1,45 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T23:34:50.140Z",
+  "summary": "The implementation successfully addresses all requirements for staff code verification and app publish/unpublish functionality. The backend maintains publication state as a stable variable with migration support, the frontend implements a staff access dialog with code verification (2807), and an unpublished overlay is displayed on all required pages except Settings. All acceptance criteria appear to be met based on the diff evidence.",
+  "missing_requirements": [],
+  "hallucinated_features": [
+    {
+      "description": "Authorization system with admin permissions",
+      "reason": "The backend implementation includes an authorization system with admin permission checks (AccessControl.hasPermission with #admin role) that was not requested in the BuildRequest. The requirements only specified a simple staff code verification, not a full role-based access control system.",
+      "evidence": [
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Migration system for canister upgrades",
+      "reason": "While persistence across upgrades was required (REQ-13), the implementation includes a full migration module (backend/migration.mo) with detailed type definitions and migration logic. The requirement only specified that state should persist, not that a migration system should be implemented.",
+      "evidence": [
+        "backend/migration.mo"
+      ]
+    },
+    {
+      "description": "Session persistence of staff verification status",
+      "reason": "The implementation persists staff verification status in sessionStorage, which extends the verification beyond the current session scope. REQ-12 only specified 'The unlocked control persists in the current session' without specifying browser storage should be used.",
+      "evidence": [
+        "frontend/src/pages/Settings.tsx"
+      ]
+    }
+  ],
+  "confidence": 0.85,
+  "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "frontend-file-summaries.txt",
+    "frontend/src/components/StaffCodeDialog.tsx",
+    "frontend/src/components/UnpublishedOverlay.tsx",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/pages/Calendar.tsx",
+    "frontend/src/pages/Dashboard.tsx",
+    "frontend/src/pages/Hashtags.tsx",
+    "frontend/src/pages/Landing.tsx",
+    "frontend/src/pages/Settings.tsx",
+    "project_state.json"
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "kind": "build_request",
+  "title": "Add staff code verification and app publish/unpublish toggle in moderation settings",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-11",
+      "text": "Add a button labeled 'Staff Access' or similar under the Moderation section on the Settings page that when clicked opens a dialog or modal prompting the user to enter a staff code",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "make there be a button under moderation where when clicked it asks for a staff code"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A button is visible in the Moderation section of the Settings page",
+        "Clicking the button opens a dialog with an input field for entering a staff code",
+        "The dialog has clear labels and submit/cancel actions"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Implement staff code verification that checks if the entered code equals '2807' and if correct, unlocks and displays a publish/unpublish toggle control",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "if the code 2807 is put in you have a button unlocked"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When the user enters '2807' and submits, the dialog closes and a new control becomes visible",
+        "If an incorrect code is entered, show an error message and do not unlock the control",
+        "The unlocked control persists in the current session"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Create an app publication state management system in the backend that tracks whether the app is published or unpublished, defaulting to published state",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "it un publishes the app and stays unpublished"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend maintains a stable variable tracking publication state (published/unpublished)",
+        "State persists across canister upgrades",
+        "Default state is published when the app is first deployed"
+      ]
+    },
+    {
+      "id": "REQ-14",
+      "text": "Add a button in the unlocked staff control that when clicked unpublishes the app and changes to show 'Republish' or similar text, allowing the state to be toggled back and forth",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "when clicked it un publishes the app and stays unpublished until you press in close re published button"
+        ]
+      },
+      "acceptanceCriteria": [
+        "After staff code verification, a toggle button is displayed showing current publication state",
+        "Clicking the button when app is published changes state to unpublished and updates button text to 'Republish'",
+        "Clicking the button when app is unpublished changes state back to published and updates button text accordingly",
+        "Backend endpoint exists to update publication state",
+        "Frontend calls backend to persist state changes"
+      ]
+    },
+    {
+      "id": "REQ-15",
+      "text": "When the app is in unpublished state, display a prominent notice or overlay on all pages (except Settings for staff) informing users that the app is currently closed for maintenance or under moderation",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-final"
+        ],
+        "quotes": [
+          "un publishes the app and stays unpublished"
+        ]
+      },
+      "acceptanceCriteria": [
+        "When publication state is unpublished, show a full-screen or prominent overlay/banner on Dashboard, Calendar, Hashtags, and Landing pages",
+        "The notice clearly communicates that the app is temporarily unavailable",
+        "Settings page remains accessible so staff can republish the app",
+        "When state changes back to published, the notice is removed immediately"
+      ]
+    }
+  ],
+  "constraints": [
+    "The staff code must be exactly '2807'",
+    "Publication state must persist across canister upgrades",
+    "Settings page must remain accessible even when app is unpublished so staff can restore access"
+  ],
+  "nonGoals": [
+    "Implementing multiple staff codes or role management beyond this single code",
+    "Creating a backend admin dashboard separate from the Settings page",
+    "Adding password hashing or encryption for the staff code",
+    "Implementing time-based automatic republishing"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
