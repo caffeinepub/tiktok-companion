@@ -1,13 +1,10 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 13,
+  "projectStateVersion": 17,
   "summary": "TikTok-related app",
   "architectural_notes": [],
-  "known_issues": [
-    "Unpublish/republish functionality not working - app remains accessible when unpublished",
-    "Staff code authentication persisting - needs to require entry each time"
-  ],
-  "isFixRequest": true,
+  "known_issues": [],
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-create-a-video-content-management-dashboard-where-users-can-view-organize-and-track-their-tiktok-video-ideas-and-drafts",
@@ -144,6 +141,22 @@
         "REQ-19"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-new-visually-distinct-feature-panel-in-the-settings-page-staff-section-displayed-only-after-staff-code-verification-that-includes-a-creative-staff-only-capability-such-as-viewing-app-analytics-managing-user-statistics-or-accessing-moderation-logs",
+      "title": "Add a new visually distinct feature panel in the Settings page staff section (displayed only after staff code verification) that includes a creative staff-only capability such as viewing app analytics, managing user statistics, or accessing moderation logs",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expand-the-staffanalyticspanel-component-to-display-the-new-metrics-in-visually-distinct-card-sections-including-total-hashtags-average-videos-per-user-top-5-hashtags-list-with-counts-and-recent-user-activity-timeline",
+      "title": "Expand the StaffAnalyticsPanel component to display the new metrics in visually distinct card sections including total hashtags, average videos per user, top 5 hashtags list with counts, and recent user activity timeline",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -184,6 +197,42 @@
       "summary": "Implement backend enforcement of publication state where unpublished state blocks all non-admin API calls except getPublicationState",
       "reqIds": [
         "REQ-17"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add additional staff controls or features to the unlocked staff section (creative/surprise element)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "If the new staff feature requires backend data (such as user count, video statistics, or activity logs), implement corresponding backend query methods and expose them only to verified staff/admin principals",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Expand staff analytics dashboard with additional metrics and visualizations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add backend query methods to retrieve additional analytics metrics including total hashtags count, average videos per user, most used hashtags (top 5), and recent user activity (last 10 profile creations with timestamps)",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Create React Query hooks in useQueries.ts for fetching the new staff analytics data (hashtag stats, user averages, top hashtags, recent activity) that are only called when staff verification is active",
+      "reqIds": [
+        "REQ-24"
       ],
       "status": "pending"
     }

@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { UserProfile, VideoIdea, Hashtag, Time, PublicationState } from '../backend';
+import type { UserProfile, VideoIdea, Hashtag, Time, PublicationState, UserStatistics, UserActivity } from '../backend';
 import { toast } from 'sonner';
 
 // User Profile Queries
@@ -200,5 +200,45 @@ export function useUnpublish() {
       console.error('Error unpublishing app:', error);
       toast.error(error.message || 'Failed to unpublish app');
     },
+  });
+}
+
+// Staff Analytics Queries
+export function useGetStatistics() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<UserStatistics>({
+    queryKey: ['statistics'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getStatistics();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetUserCount() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<bigint>({
+    queryKey: ['userCount'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getUserCount();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
+export function useGetAllUserActivity() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<UserActivity[]>({
+    queryKey: ['userActivity'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getAllUserActivity();
+    },
+    enabled: !!actor && !isFetching,
   });
 }

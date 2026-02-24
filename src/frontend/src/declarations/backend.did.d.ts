@@ -18,6 +18,12 @@ export interface Hashtag {
 export type PublicationState = { 'published' : null } |
   { 'unpublished' : null };
 export type Time = bigint;
+export interface UserActivity {
+  'videoCount' : bigint,
+  'lastActivity' : [] | [Time],
+  'user' : Principal,
+  'hashtagCount' : bigint,
+}
 export interface UserProfile {
   'bio' : [] | [string],
   'name' : string,
@@ -26,6 +32,17 @@ export interface UserProfile {
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
+export interface UserStatistics {
+  'recentUserActivity' : Array<UserProfile>,
+  'totalHashtags' : bigint,
+  'publishedVideos' : bigint,
+  'mostUsedHashtags' : Array<Hashtag>,
+  'scheduledVideos' : bigint,
+  'draftVideos' : bigint,
+  'totalVideos' : bigint,
+  'totalUsers' : bigint,
+  'averageVideosPerUser' : number,
+}
 export interface VideoIdea {
   'status' : VideoStatus,
   'title' : string,
@@ -44,11 +61,16 @@ export interface _SERVICE {
   'addVideoIdea' : ActorMethod<[string, string, Array<string>], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteDraft' : ActorMethod<[string], undefined>,
+  'getAllUserActivity' : ActorMethod<[], Array<UserActivity>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getHashtags' : ActorMethod<[], Array<Hashtag>>,
   'getPublicationState' : ActorMethod<[], PublicationState>,
+  'getStatistics' : ActorMethod<[], UserStatistics>,
+  'getUserCount' : ActorMethod<[], bigint>,
+  'getUserHashtags' : ActorMethod<[Principal], Array<Hashtag>>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getUserVideos' : ActorMethod<[Principal], Array<VideoIdea>>,
   'getVideoIdeas' : ActorMethod<[], Array<VideoIdea>>,
   'getVideosByDateRange' : ActorMethod<[Time, Time], Array<VideoIdea>>,
   'isCallerAdmin' : ActorMethod<[], boolean>,

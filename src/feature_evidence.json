@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-sessionstorage-persistence-for-staff-code-verification-so-that-staff-must-enter-the-code-2807-every-time-they-access-the-settings-page-moderation-controls",
-      "featureTitle": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
+      "featureId": "feature-expand-the-staffanalyticspanel-component-to-display-the-new-metrics-in-visually-distinct-card-sections-including-total-hashtags-average-videos-per-user-top-5-hashtags-list-with-counts-and-recent-user-activity-timeline",
+      "featureTitle": "Expand the StaffAnalyticsPanel component to display the new metrics in visually distinct card sections including total hashtags, average videos per user, top 5 hashtags list with counts, and recent user activity timeline",
       "files": [
-        "frontend/src/pages/Settings.tsx"
+        "frontend/src/components/StaffAnalyticsPanel.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -16,49 +16,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-16"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-frontend-to-fetch-publication-state-before-any-data-queries-and-display-unpublishedoverlay-on-all-pages-except-settings-when-state-is-unpublished",
-      "featureTitle": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
-      "files": [
-        "frontend/src/pages/Calendar.tsx",
-        "frontend/src/pages/Dashboard.tsx",
-        "frontend/src/pages/Hashtags.tsx",
-        "frontend/src/pages/Landing.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-18"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-fix-the-republish-button-functionality-so-that-clicking-it-successfully-changes-the-backend-publication-state-from-unpublished-back-to-published",
-      "featureTitle": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
-      "files": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/Settings.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-19"
+        "REQ-23"
       ],
       "confidence": "high"
     }

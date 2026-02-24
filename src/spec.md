@@ -1,12 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix unpublish functionality to actually restrict app access and enforce staff code entry on every Settings page visit.
+**Goal:** Expand the staff analytics dashboard with additional metrics including hashtag statistics, user activity, and video averages.
 
 **Planned changes:**
-- Remove sessionStorage persistence for staff code verification so staff must enter code '2807' every time they access moderation controls
-- Implement backend enforcement that blocks all non-admin API calls (except getPublicationState) when app is unpublished
-- Update frontend to check publication state before rendering content and display UnpublishedOverlay on all pages except Settings when unpublished
-- Fix the republish button to successfully change backend state from unpublished back to published
+- Add backend query methods to retrieve total hashtags count, average videos per user, top 5 most used hashtags, and recent user activity (last 10 profile creations)
+- Expand StaffAnalyticsPanel component to display new metrics in visually distinct card sections
+- Create React Query hooks for fetching the new staff analytics data with proper authorization checks
 
-**User-visible outcome:** When staff unpublishes the app, all users will see the unpublished overlay and cannot access any content until the app is republished. Staff must enter the code each time they visit Settings to access moderation controls.
+**User-visible outcome:** Staff members can view expanded analytics including hashtag statistics, average videos per user, top 5 hashtags with usage counts, and a timeline of the 10 most recent user profiles with creation timestamps.

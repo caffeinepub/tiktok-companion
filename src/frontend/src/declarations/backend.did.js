@@ -14,6 +14,12 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const Time = IDL.Int;
+export const UserActivity = IDL.Record({
+  'videoCount' : IDL.Nat,
+  'lastActivity' : IDL.Opt(Time),
+  'user' : IDL.Principal,
+  'hashtagCount' : IDL.Nat,
+});
 export const UserProfile = IDL.Record({
   'bio' : IDL.Opt(IDL.Text),
   'name' : IDL.Text,
@@ -27,6 +33,17 @@ export const Hashtag = IDL.Record({
 export const PublicationState = IDL.Variant({
   'published' : IDL.Null,
   'unpublished' : IDL.Null,
+});
+export const UserStatistics = IDL.Record({
+  'recentUserActivity' : IDL.Vec(UserProfile),
+  'totalHashtags' : IDL.Nat,
+  'publishedVideos' : IDL.Nat,
+  'mostUsedHashtags' : IDL.Vec(Hashtag),
+  'scheduledVideos' : IDL.Nat,
+  'draftVideos' : IDL.Nat,
+  'totalVideos' : IDL.Nat,
+  'totalUsers' : IDL.Nat,
+  'averageVideosPerUser' : IDL.Float64,
 });
 export const VideoStatus = IDL.Variant({
   'scheduled' : IDL.Null,
@@ -49,15 +66,20 @@ export const idlService = IDL.Service({
   'addVideoIdea' : IDL.Func([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'deleteDraft' : IDL.Func([IDL.Text], [], []),
+  'getAllUserActivity' : IDL.Func([], [IDL.Vec(UserActivity)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getHashtags' : IDL.Func([], [IDL.Vec(Hashtag)], ['query']),
   'getPublicationState' : IDL.Func([], [PublicationState], ['query']),
+  'getStatistics' : IDL.Func([], [UserStatistics], ['query']),
+  'getUserCount' : IDL.Func([], [IDL.Nat], ['query']),
+  'getUserHashtags' : IDL.Func([IDL.Principal], [IDL.Vec(Hashtag)], ['query']),
   'getUserProfile' : IDL.Func(
       [IDL.Principal],
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'getUserVideos' : IDL.Func([IDL.Principal], [IDL.Vec(VideoIdea)], ['query']),
   'getVideoIdeas' : IDL.Func([], [IDL.Vec(VideoIdea)], ['query']),
   'getVideosByDateRange' : IDL.Func(
       [Time, Time],
@@ -80,6 +102,12 @@ export const idlFactory = ({ IDL }) => {
     'guest' : IDL.Null,
   });
   const Time = IDL.Int;
+  const UserActivity = IDL.Record({
+    'videoCount' : IDL.Nat,
+    'lastActivity' : IDL.Opt(Time),
+    'user' : IDL.Principal,
+    'hashtagCount' : IDL.Nat,
+  });
   const UserProfile = IDL.Record({
     'bio' : IDL.Opt(IDL.Text),
     'name' : IDL.Text,
@@ -93,6 +121,17 @@ export const idlFactory = ({ IDL }) => {
   const PublicationState = IDL.Variant({
     'published' : IDL.Null,
     'unpublished' : IDL.Null,
+  });
+  const UserStatistics = IDL.Record({
+    'recentUserActivity' : IDL.Vec(UserProfile),
+    'totalHashtags' : IDL.Nat,
+    'publishedVideos' : IDL.Nat,
+    'mostUsedHashtags' : IDL.Vec(Hashtag),
+    'scheduledVideos' : IDL.Nat,
+    'draftVideos' : IDL.Nat,
+    'totalVideos' : IDL.Nat,
+    'totalUsers' : IDL.Nat,
+    'averageVideosPerUser' : IDL.Float64,
   });
   const VideoStatus = IDL.Variant({
     'scheduled' : IDL.Null,
@@ -115,13 +154,26 @@ export const idlFactory = ({ IDL }) => {
     'addVideoIdea' : IDL.Func([IDL.Text, IDL.Text, IDL.Vec(IDL.Text)], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'deleteDraft' : IDL.Func([IDL.Text], [], []),
+    'getAllUserActivity' : IDL.Func([], [IDL.Vec(UserActivity)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getHashtags' : IDL.Func([], [IDL.Vec(Hashtag)], ['query']),
     'getPublicationState' : IDL.Func([], [PublicationState], ['query']),
+    'getStatistics' : IDL.Func([], [UserStatistics], ['query']),
+    'getUserCount' : IDL.Func([], [IDL.Nat], ['query']),
+    'getUserHashtags' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(Hashtag)],
+        ['query'],
+      ),
     'getUserProfile' : IDL.Func(
         [IDL.Principal],
         [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
+    'getUserVideos' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Vec(VideoIdea)],
         ['query'],
       ),
     'getVideoIdeas' : IDL.Func([], [IDL.Vec(VideoIdea)], ['query']),

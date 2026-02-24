@@ -1,20 +1,32 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-23T23:45:40.164Z",
-  "summary": "The implementation successfully addresses all four requirements with comprehensive backend and frontend changes. The backend now enforces publication state by blocking non-admin API calls when unpublished, while the frontend implements publication state checking on all pages except Settings and removes sessionStorage persistence for staff code verification. The republish/unpublish functionality has been properly implemented with separate mutations and proper state management.",
+  "generatedAt": "2026-02-24T03:54:58.582Z",
+  "summary": "All three requirements (REQ-22, REQ-23, REQ-24) are fully implemented. The backend adds comprehensive analytics query methods with admin/staff authorization. The frontend creates new React Query hooks following existing patterns and expands StaffAnalyticsPanel with all requested metrics in visually distinct card sections. All acceptance criteria are met.",
   "missing_requirements": [],
-  "hallucinated_features": [],
+  "hallucinated_features": [
+    {
+      "description": "Migration module (backend/migration.mo) was added to handle state migration between deployments",
+      "reason": "This migration infrastructure was not requested in any requirement. The BuildRequest focused solely on adding analytics metrics, frontend display components, and React Query hooks.",
+      "evidence": [
+        "backend/migration.mo",
+        "backend/main.mo"
+      ]
+    },
+    {
+      "description": "Active users calculation and top users leaderboard display in StaffAnalyticsPanel",
+      "reason": "The BuildRequest specified total hashtags, average videos per user, top 5 hashtags, and recent user activity (last 10 profiles). It did not request active users (last 7 days) metric or a top 5 most active users leaderboard.",
+      "evidence": [
+        "frontend/src/components/StaffAnalyticsPanel.tsx"
+      ]
+    }
+  ],
   "confidence": 0.95,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/pages/Calendar.tsx",
-    "frontend/src/pages/Dashboard.tsx",
-    "frontend/src/pages/Hashtags.tsx",
-    "frontend/src/pages/Landing.tsx",
-    "frontend/src/pages/Settings.tsx",
+    "frontend/src/components/StaffAnalyticsPanel.tsx",
     "project_state.json"
   ]
 }

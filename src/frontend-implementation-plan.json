@@ -1,86 +1,41 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix unpublish functionality and enforce staff code entry on every access",
+  "title": "Expand staff analytics dashboard with additional metrics",
   "requirements": [
     {
-      "id": "REQ-16",
-      "summary": "Remove sessionStorage persistence for staff code verification to require code '2807' entry on every Settings page access",
+      "id": "REQ-23",
+      "summary": "Expand the StaffAnalyticsPanel component to display new metrics including total hashtags, average videos per user, top 5 hashtags list, and recent user activity timeline",
       "acceptanceCriteria": [
-        "Staff code verification state is not stored in sessionStorage",
-        "Users must enter code '2807' each time they visit Settings page",
-        "Moderation controls remain locked until code is entered, even after page refresh"
+        "StaffAnalyticsPanel displays total hashtags count in a stat card",
+        "Panel shows average videos per user rounded to 1 decimal place",
+        "Top 5 hashtags are displayed in a ranked list with their usage counts",
+        "Recent user activity shows the 10 newest users with formatted timestamps",
+        "All new sections maintain the existing visual design style with consistent spacing and typography",
+        "Loading and error states are handled for all new data queries"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/StaffCodeDialog.tsx",
+          "path": "frontend/src/components/StaffAnalyticsPanel.tsx",
           "operation": "modify",
-          "description": "Remove sessionStorage.setItem call that persists staff code verification state. Remove sessionStorage checks from code verification logic so that verification always requires fresh code entry."
-        },
-        {
-          "path": "frontend/src/pages/Settings.tsx",
-          "operation": "modify",
-          "description": "Remove sessionStorage.getItem check for 'staffCodeVerified' from the initial state. Set isStaffVerified state to always default to false, ensuring staff code dialog appears on every Settings page visit."
+          "description": "Expand the component to display four new analytics sections: (1) total hashtags count in a stat card, (2) average videos per user rounded to 1 decimal place in a stat card, (3) top 5 most used hashtags in a ranked list showing hashtag names and usage counts, and (4) recent user activity timeline showing the 10 newest users with their names and formatted creation timestamps. Use the existing UserStatistics interface from backend.d.ts which includes totalHashtags (bigint), averageVideosPerUser (number), mostUsedHashtags (Array<Hashtag>), and recentUserActivity (Array<UserProfile>) fields. Maintain the current visual design using the same card styling, grid layout, and typography patterns. The component already fetches statistics via useGetStatistics hook, so access the new fields directly from the statistics data object. Handle loading and error states consistently with the existing implementation."
         }
       ]
     },
     {
-      "id": "REQ-18",
-      "summary": "Create usePublicationState hook and display UnpublishedOverlay on all pages except Settings when state is unpublished",
+      "id": "REQ-24",
+      "summary": "Create React Query hooks in useQueries.ts for fetching the new staff analytics data that are only called when staff verification is active",
       "acceptanceCriteria": [
-        "Create a usePublicationState hook that queries backend publication state",
-        "Dashboard, Calendar, Hashtags, and Landing pages check publication state before rendering main content",
-        "UnpublishedOverlay displays on affected pages when state is #unpublished",
-        "Settings page always remains accessible for staff to republish the app"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/usePublicationState.ts",
-          "operation": "create",
-          "description": "Create a React Query hook that fetches the publication state from the backend using actor.getPublicationState(). Include proper loading states, actor dependency checks, and query configuration with appropriate staleTime and refetchInterval to keep state current."
-        },
-        {
-          "path": "frontend/src/pages/Dashboard.tsx",
-          "operation": "modify",
-          "description": "Import and use the usePublicationState hook. When publication state is 'unpublished', render the UnpublishedOverlay component instead of the main dashboard content. Ensure loading states are handled properly."
-        },
-        {
-          "path": "frontend/src/pages/Calendar.tsx",
-          "operation": "modify",
-          "description": "Import and use the usePublicationState hook. When publication state is 'unpublished', render the UnpublishedOverlay component instead of the calendar content. Ensure loading states are handled properly."
-        },
-        {
-          "path": "frontend/src/pages/Hashtags.tsx",
-          "operation": "modify",
-          "description": "Import and use the usePublicationState hook. When publication state is 'unpublished', render the UnpublishedOverlay component instead of the hashtags content. Ensure loading states are handled properly."
-        },
-        {
-          "path": "frontend/src/pages/Landing.tsx",
-          "operation": "modify",
-          "description": "Import and use the usePublicationState hook. When publication state is 'unpublished', render the UnpublishedOverlay component instead of the landing page content. Ensure loading states are handled properly."
-        }
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "summary": "Fix republish button to successfully change backend publication state from unpublished to published",
-      "acceptanceCriteria": [
-        "Clicking the Republish button in Settings triggers the setPublicationState backend method with #published",
-        "Backend state changes from #unpublished to #published",
-        "Button label updates to show 'Unpublish' after successful republish",
-        "App becomes accessible to all users immediately after republishing",
-        "Success toast notification displays confirming republish action"
+        "New custom hooks follow the existing useQueries.ts patterns",
+        "Hooks properly handle loading, error, and success states",
+        "Queries are disabled when actor is not available",
+        "Data is properly typed with TypeScript interfaces"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add useRepublish and useUnpublish mutation hooks that call actor.republish() and actor.unpublish() respectively. Include proper error handling, success toasts, and query invalidation for the publication state query to ensure UI updates immediately after state changes."
-        },
-        {
-          "path": "frontend/src/pages/Settings.tsx",
-          "operation": "modify",
-          "description": "Import and use the usePublicationState hook to fetch current state. Replace the existing unpublish/republish button click handlers with calls to useRepublish and useUnpublish mutations. Update button text and state based on the current publication state from the hook. Ensure proper loading states during mutations and remove any hardcoded state management."
+          "description": "The existing useGetStatistics hook already fetches all required analytics data from the backend's getStatistics method, which returns UserStatistics containing totalHashtags, averageVideosPerUser, mostUsedHashtags, and recentUserActivity fields. Verify that the hook follows the established pattern: uses React Query's useQuery with queryKey ['statistics'], calls actor.getStatistics(), is enabled only when actor is available, and properly types the return value as UserStatistics. No new hooks are required since the backend interface already provides all necessary data through the single getStatistics endpoint. Ensure the hook handles loading, error, and success states consistently with other query hooks in the file."
         }
       ]
     }

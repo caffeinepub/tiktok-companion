@@ -3,6 +3,7 @@ import { Settings as SettingsIcon, Lock, Power } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import StaffCodeDialog from '@/components/StaffCodeDialog';
+import StaffAnalyticsPanel from '@/components/StaffAnalyticsPanel';
 import { useGetPublicationState, useRepublish, useUnpublish } from '@/hooks/useQueries';
 import { Loader2 } from 'lucide-react';
 
@@ -113,6 +114,9 @@ export default function Settings() {
                     </Button>
                   )}
                 </div>
+
+                {/* Staff Analytics Panel */}
+                <StaffAnalyticsPanel />
               </div>
             )}
           </CardContent>

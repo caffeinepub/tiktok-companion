@@ -8,12 +8,13 @@ import List "mo:core/List";
 import Int "mo:core/Int";
 import Runtime "mo:core/Runtime";
 import Order "mo:core/Order";
+import Migration "migration";
 
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 
-// apply migration via with-clause
-
+// Migrate old state to new state at deployment time
+(with migration = Migration.run)
 actor {
   // Include authorization system
   let accessControlState = AccessControl.initState();
@@ -103,6 +104,26 @@ actor {
     name : Text;
     usageCount : Nat;
     createdAt : Time.Time;
+  };
+
+  // Staff Dashboard Types
+  public type UserStatistics = {
+    totalUsers : Nat;
+    totalVideos : Nat;
+    draftVideos : Nat;
+    scheduledVideos : Nat;
+    publishedVideos : Nat;
+    totalHashtags : Nat;
+    averageVideosPerUser : Float;
+    mostUsedHashtags : [Hashtag];
+    recentUserActivity : [UserProfile];
+  };
+
+  public type UserActivity = {
+    user : Principal;
+    videoCount : Nat;
+    hashtagCount : Nat;
+    lastActivity : ?Time.Time;
   };
 
   let userProfiles = Map.empty<Principal, UserProfile>();
@@ -287,5 +308,179 @@ actor {
       case (null) { [] };
       case (?tags) { tags.toArray() };
     };
+  };
+
+  // Staff/Admin Dashboard Functions
+  // Get overall platform statistics (admin only)
+  public query ({ caller }) func getStatistics() : async UserStatistics {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view statistics");
+    };
+
+    var totalVideos = 0;
+    var draftVideos = 0;
+    var scheduledVideos = 0;
+    var publishedVideos = 0;
+    var totalHashtags = 0;
+
+    for ((_, ideas) in videoIdeas.entries()) {
+      for (idea in ideas.values()) {
+        totalVideos += 1;
+        switch (idea.status) {
+          case (#draft) { draftVideos += 1 };
+          case (#scheduled) { scheduledVideos += 1 };
+          case (#published) { publishedVideos += 1 };
+        };
+      };
+    };
+
+    for ((_, tags) in hashtags.entries()) {
+      totalHashtags += tags.size();
+    };
+
+    let userCount = userProfiles.size();
+
+    // Calculate average videos per user
+    let averageVideosPerUser : Float = if (userCount == 0) {
+      0.0;
+    } else {
+      totalVideos.toFloat() / userCount.toFloat();
+    };
+
+    // Find most used hashtags across all users
+    let allTags = List.empty<Hashtag>();
+    for ((_, userTags) in hashtags.entries()) {
+      allTags.addAll(userTags.values());
+    };
+
+    let sortedTags = allTags.toArray().sort(
+      func(a, b) {
+        Int.compare(b.usageCount, a.usageCount);
+      }
+    );
+
+    // Get top 5 most used hashtags
+    let mostUsedHashtags = if (sortedTags.size() <= 5) {
+      sortedTags;
+    } else {
+      Array.tabulate(5, func(i) { sortedTags[i] });
+    };
+
+    // Get 10 most recent user profile creations
+    let sortedProfiles = userProfiles.values().toArray().sort(
+      func(a, b) {
+        Int.compare(b.createdAt, a.createdAt);
+      }
+    );
+
+    let recentUserActivity = if (sortedProfiles.size() <= 10) {
+      sortedProfiles;
+    } else {
+      Array.tabulate(10, func(i) { sortedProfiles[i] });
+    };
+
+    {
+      totalUsers = userCount;
+      totalVideos;
+      draftVideos;
+      scheduledVideos;
+      publishedVideos;
+      totalHashtags;
+      averageVideosPerUser;
+      mostUsedHashtags;
+      recentUserActivity;
+    };
+  };
+
+  // Get all user activity (admin only)
+  public query ({ caller }) func getAllUserActivity() : async [UserActivity] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view user activity");
+    };
+
+    let activities = Map.empty<Principal, UserActivity>();
+
+    // Collect video counts and last activity
+    for ((user, ideas) in videoIdeas.entries()) {
+      var lastActivity : ?Time.Time = null;
+      for (idea in ideas.values()) {
+        switch (lastActivity) {
+          case (null) { lastActivity := ?idea.lastModified };
+          case (?current) {
+            if (idea.lastModified > current) {
+              lastActivity := ?idea.lastModified;
+            };
+          };
+        };
+      };
+
+      let hashtagCount = switch (hashtags.get(user)) {
+        case (null) { 0 };
+        case (?tags) { tags.size() };
+      };
+
+      activities.add(
+        user,
+        {
+          user;
+          videoCount = ideas.size();
+          hashtagCount;
+          lastActivity;
+        },
+      );
+    };
+
+    // Add users with only hashtags
+    for ((user, tags) in hashtags.entries()) {
+      switch (activities.get(user)) {
+        case (null) {
+          activities.add(
+            user,
+            {
+              user;
+              videoCount = 0;
+              hashtagCount = tags.size();
+              lastActivity = null;
+            },
+          );
+        };
+        case (?_) {}; // Already added
+      };
+    };
+
+    activities.values().toArray();
+  };
+
+  // Get specific user's videos (admin only)
+  public query ({ caller }) func getUserVideos(user : Principal) : async [VideoIdea] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view other users' videos");
+    };
+
+    switch (videoIdeas.get(user)) {
+      case (null) { [] };
+      case (?ideas) { ideas.toArray().sort() };
+    };
+  };
+
+  // Get specific user's hashtags (admin only)
+  public query ({ caller }) func getUserHashtags(user : Principal) : async [Hashtag] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view other users' hashtags");
+    };
+
+    switch (hashtags.get(user)) {
+      case (null) { [] };
+      case (?tags) { tags.toArray() };
+    };
+  };
+
+  // Get all users count (admin only)
+  public query ({ caller }) func getUserCount() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can view user count");
+    };
+
+    userProfiles.size();
   };
 };

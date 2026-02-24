@@ -17,8 +17,9 @@
   "frontend/src/components/HashtagCard.tsx": "Card component displaying hashtag name, usage count, creation date, and copy-to-clipboard functionality.",
   "frontend/src/components/HashtagForm.tsx": "Form component for adding new hashtags with automatic # prefix handling.",
   "frontend/src/hooks/useGetCallerUserProfile.ts": "React Query hook for fetching current user profile with proper loading state handling to prevent modal flash.",
-  "frontend/src/hooks/useQueries.ts": "Centralized React Query hooks for all backend operations including video ideas, hashtags, scheduling, user profile management, draft deletion, and separate useRepublish/useUnpublish mutations with proper cache invalidation and toast notifications.",
-  "frontend/src/pages/Settings.tsx": "Settings page with general settings and moderation section featuring staff code verification and publication toggle control using separate republish/unpublish mutations, with no sessionStorage persistence for staff verification.",
+  "frontend/src/hooks/useQueries.ts": "Centralized React Query hooks for all backend operations including video ideas, hashtags, scheduling, user profile management, draft deletion, publication state management, and new staff analytics queries (useGetStatistics, useGetUserCount, useGetAllUserActivity).",
+  "frontend/src/pages/Settings.tsx": "Settings page with general settings and moderation section featuring staff code verification, publication toggle control, and staff analytics panel that displays after verification.",
   "frontend/src/components/StaffCodeDialog.tsx": "Dialog component for staff code verification that checks if entered code equals '2807' and calls onVerified callback on success, with no sessionStorage persistence.",
-  "frontend/src/components/UnpublishedOverlay.tsx": "Full-screen overlay component displaying maintenance notice with warning icon when app is unpublished."
+  "frontend/src/components/UnpublishedOverlay.tsx": "Full-screen overlay component displaying maintenance notice with warning icon when app is unpublished.",
+  "frontend/src/components/StaffAnalyticsPanel.tsx": "Comprehensive staff analytics dashboard displaying organized sections for platform overview (users, videos, hashtags, average videos per user), video status breakdown (drafts, scheduled, published), user engagement metrics (active users, top 5 hashtags), most active users ranked by video count, and recent user registrations with formatted timestamps."
 }

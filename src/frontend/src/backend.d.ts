@@ -16,6 +16,17 @@ export interface VideoIdea {
     description: string;
     lastModified: Time;
 }
+export interface UserStatistics {
+    recentUserActivity: Array<UserProfile>;
+    totalHashtags: bigint;
+    publishedVideos: bigint;
+    mostUsedHashtags: Array<Hashtag>;
+    scheduledVideos: bigint;
+    draftVideos: bigint;
+    totalVideos: bigint;
+    totalUsers: bigint;
+    averageVideosPerUser: number;
+}
 export type Time = bigint;
 export interface Hashtag {
     name: string;
@@ -26,6 +37,12 @@ export interface UserProfile {
     bio?: string;
     name: string;
     createdAt: Time;
+}
+export interface UserActivity {
+    videoCount: bigint;
+    lastActivity?: Time;
+    user: Principal;
+    hashtagCount: bigint;
 }
 export enum PublicationState {
     published = "published",
@@ -46,11 +63,16 @@ export interface backendInterface {
     addVideoIdea(title: string, description: string, hashtagsList: Array<string>): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteDraft(title: string): Promise<void>;
+    getAllUserActivity(): Promise<Array<UserActivity>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getHashtags(): Promise<Array<Hashtag>>;
     getPublicationState(): Promise<PublicationState>;
+    getStatistics(): Promise<UserStatistics>;
+    getUserCount(): Promise<bigint>;
+    getUserHashtags(user: Principal): Promise<Array<Hashtag>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getUserVideos(user: Principal): Promise<Array<VideoIdea>>;
     getVideoIdeas(): Promise<Array<VideoIdea>>;
     getVideosByDateRange(startDate: Time, endDate: Time): Promise<Array<VideoIdea>>;
     isCallerAdmin(): Promise<boolean>;

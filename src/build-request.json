@@ -1,95 +1,83 @@
 {
   "kind": "build_request",
-  "title": "Fix unpublish functionality and enforce staff code entry on every access",
-  "priority": "high",
+  "title": "Expand staff analytics dashboard with additional metrics",
+  "projectName": "TikTok Companion",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-16",
-      "text": "Remove sessionStorage persistence for staff code verification so that staff must enter the code '2807' every time they access the Settings page moderation controls",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ],
-        "quotes": [
-          "make every one have to type the staff code"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Staff code verification state is not stored in sessionStorage",
-        "Users must enter code '2807' each time they visit Settings page",
-        "Moderation controls remain locked until code is entered, even after page refresh"
-      ]
-    },
-    {
-      "id": "REQ-17",
-      "text": "Implement backend enforcement of publication state where unpublished state blocks all non-admin API calls except getPublicationState",
+      "id": "REQ-22",
+      "text": "Add backend query methods to retrieve additional analytics metrics including total hashtags count, average videos per user, most used hashtags (top 5), and recent user activity (last 10 profile creations with timestamps)",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ],
         "quotes": [
-          "Make the app ACTUALY get unpublished"
+          "Add more"
         ]
       },
       "acceptanceCriteria": [
-        "When publicationState is #unpublished, all user-facing API methods return an error or empty results for non-admin callers",
-        "getPublicationState method remains accessible to all users regardless of publication state",
-        "Admin users (verified via authorization system) can access all methods even when unpublished",
-        "Methods to protect: getUserProfile, getVideoIdeas, addVideoIdea, updateVideoIdea, deleteVideoIdea, scheduleVideo, getHashtags, addHashtag"
+        "Backend exposes new query method(s) that return hashtag statistics",
+        "Backend calculates and returns average videos per user metric",
+        "Backend returns top 5 most used hashtags with usage counts",
+        "Backend returns list of 10 most recent user profiles with creation timestamps",
+        "All new query methods are restricted to admin/staff principals only"
       ]
     },
     {
-      "id": "REQ-18",
-      "text": "Update frontend to fetch publication state before any data queries and display UnpublishedOverlay on all pages except Settings when state is unpublished",
+      "id": "REQ-23",
+      "text": "Expand the StaffAnalyticsPanel component to display the new metrics in visually distinct card sections including total hashtags, average videos per user, top 5 hashtags list with counts, and recent user activity timeline",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ],
         "quotes": [
-          "Make the app ACTUALY get unpublished"
+          "Add more"
         ]
       },
       "acceptanceCriteria": [
-        "Create a usePublicationState hook that queries backend publication state",
-        "Dashboard, Calendar, Hashtags, and Landing pages check publication state before rendering main content",
-        "UnpublishedOverlay displays on affected pages when state is #unpublished",
-        "Settings page always remains accessible for staff to republish the app"
+        "StaffAnalyticsPanel displays total hashtags count in a stat card",
+        "Panel shows average videos per user rounded to 1 decimal place",
+        "Top 5 hashtags are displayed in a ranked list with their usage counts",
+        "Recent user activity shows the 10 newest users with formatted timestamps",
+        "All new sections maintain the existing visual design style with consistent spacing and typography",
+        "Loading and error states are handled for all new data queries"
       ]
     },
     {
-      "id": "REQ-19",
-      "text": "Fix the republish button functionality so that clicking it successfully changes the backend publication state from unpublished back to published",
-      "target": "both",
+      "id": "REQ-24",
+      "text": "Create React Query hooks in useQueries.ts for fetching the new staff analytics data (hashtag stats, user averages, top hashtags, recent activity) that are only called when staff verification is active",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-5"
         ],
         "quotes": [
-          "the republish button to work"
+          "Add more"
         ]
       },
       "acceptanceCriteria": [
-        "Clicking the Republish button in Settings triggers the setPublicationState backend method with #published",
-        "Backend state changes from #unpublished to #published",
-        "Button label updates to show 'Unpublish' after successful republish",
-        "App becomes accessible to all users immediately after republishing",
-        "Success toast notification displays confirming republish action"
+        "New custom hooks follow the existing useQueries.ts patterns",
+        "Hooks properly handle loading, error, and success states",
+        "Queries are disabled when actor is not available",
+        "Data is properly typed with TypeScript interfaces"
       ]
     }
   ],
   "constraints": [
-    "Staff code must remain '2807'",
-    "Settings page must remain accessible regardless of publication state",
-    "Admin authorization system (MixinAuthorization) must be used for backend publication state enforcement",
-    "Do not modify the UnpublishedOverlay component UI"
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Do not change the existing staff code verification logic (2807)",
+    "Maintain single-actor architecture in backend/main.mo",
+    "All new analytics queries must enforce admin/staff authorization",
+    "Do not alter the existing color scheme or visual design patterns"
   ],
   "nonGoals": [
-    "Changing the staff code value",
-    "Adding additional admin roles or permissions",
-    "Modifying the visual design of the Settings page or UnpublishedOverlay"
+    "Adding export or download functionality for analytics data",
+    "Implementing date range filters for analytics",
+    "Creating interactive charts or graphs",
+    "Adding real-time data updates or WebSocket connections",
+    "Modifying existing analytics metrics or their calculation methods"
   ],
   "imageRequirements": {
     "required": [],
